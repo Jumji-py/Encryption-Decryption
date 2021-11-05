@@ -1,2 +1,3 @@
-# Encryptor-Decryptor
-A basic encryption and decryption program to visualize how the process of protecting data works. 
+# Encryptor/Decryptor
+This is a basic encryption and decryption program made in python.  
+The program can encrypt/decrypt single line sentences or paragraphs in the terminal.
