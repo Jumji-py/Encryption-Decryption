@@ -1,46 +1,75 @@
-plaintext = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","1","2","3","4","5","6","7","8","9","0","-","+","="," ",",",";",":","'","%","#","!","$","(",")","&","*","_","[","]","{","}","/","?","<",">","£","`","¬","~"]
-cyphertext = ["p","u","x","z","r","q","o","y","v","w","s","g","d","a","t","l","c","j","i","n","e","b","k","h","f","m","P","U","X","Z","R","Q","O","Y","V","W","S","G","D","A","T","L","C","J","I","N","E","B","K","H","F","M","8","0","7","9","2","4","5","3","1","6","-","+","="," ",",",";",":","'","%","#","!","$","(",")","&","*","_","[","]","{","}","/","?","<",">","£","`","¬","~"]
+#!/usr/bin/env python3
 
-def encrypt(sentence):
-    encryption = ""
+import json
+
+# the previous functions were basically doing the same thing
+def crypt(task, sentence, keys) -> str:
+    # keys parameter is to allow changing decryption keys (pass a dictionary)
+    result = ""
     for letter in sentence:
-        for i in range(len(plaintext)):
-            if letter == plaintext[i]:
-                encryption += cyphertext[i]
+        for key in keys:
+            if task == "encrypt":
+                if letter == key:
+                    result += keys[key]
+            elif task == "decrypt":
+                # inverse procedure of encrypting
+                if letter == keys[key]:
+                    result += key
+            else:
+                raise ValueError("Invalid encryption task assigned")
 
-    return encryption
+    return result
 
-def decrypt(sentence):
-    decryption = ""
-    for letter in sentence:
-        for i in range(len(cyphertext)):
-            if letter == cyphertext[i]:
-                decryption += plaintext[i]
 
-    return decryption
+def main():
+    # converts json-stored keys needed for decryption to a python dictionary
+    with open("keys.json", "r") as f:
+        keys = json.load(f)
 
-x = ""
-while x != "x":
-    print ("Please select the the process you would like to carry out from below:")
-    print ("1. Encrypting data,")
-    print ("2. Decrypting data.")
-    check = int(input("Please enter the index number for the process you would like to execute from above here --> "))
+    # boolean flags are more pythonic than x = ""
+    active = True
 
-    if check == 1:
-        sentence = str(input("\nInput sentence here --> "))
-        encryption = encrypt(sentence)
+    # main loop
+    while active:
+        print("\nPlease select the the process you would like to carry out from below:")
+        print("1. Encrypting data,")
+        print("2. Decrypting data.")
 
-        print ("\n=================================================\n")
-        print (encryption)
-        print ("\n=================================================\n")
+        # prompt till the option is valid, if the number isn't defined, skip
+        try:
+            usr_input = int(
+                input(
+                    "Please enter the index number for the process you would like to execute from above here --> "
+                )
+            )
+        except ValueError:
+            continue
 
-    elif check == 2:
-        print ("")
-        sentence = str(input("Input sentence here --> "))
-        decryption = decrypt(sentence)
+        if usr_input == 1:
+            sentence = str(input("\nInput sentence here --> "))
+            encryption = crypt("encrypt", sentence, keys)
 
-        print ("\n=================================================\n")
-        print (decryption)
-        print ("\n=================================================\n")
+            print("\n=================================================\n")
+            print(encryption)
+            print("\n=================================================\n")
 
-    x = str(input("If you would like to exit, type 'x'. If not and you would like to continue, press 'enter' --> "))
+        elif usr_input == 2:
+            sentence = str(input("\nInput sentence here --> "))
+            decryption = crypt("decrypt", sentence, keys)
+
+            print("\n=================================================\n")
+            print(decryption)
+            print("\n=================================================\n")
+
+        keep_running = str(
+            input(
+                "If you would like to exit, type 'x'. If not and you would like to continue, press 'enter' --> "
+            )
+        )
+
+        if keep_running == "x":
+            active = False
+
+
+if __name__ == "__main__":
+    main()
