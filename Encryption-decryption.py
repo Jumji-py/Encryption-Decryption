@@ -2,7 +2,6 @@
 
 import json
 
-# the previous functions were basically doing the same thing
 def crypt(task, sentence, keys) -> str:
     # keys parameter is to allow changing decryption keys (pass a dictionary)
     result = ""
@@ -26,7 +25,7 @@ def main():
     with open("keys.json", "r") as f:
         keys = json.load(f)
 
-    # boolean flags are more pythonic than x = ""
+    # boolean flag used to exit loop
     active = True
 
     # main loop
